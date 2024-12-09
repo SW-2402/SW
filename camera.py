@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import cv2
 import numpy as np
+from video_DB import Video_DB
 
 load_dotenv()
 
@@ -13,6 +14,7 @@ class Camera:
         self.recordingTime = None
         self.videoList = None
         self.data_path = os.getenv('DATA_PATH')
+        self.vidio_db = Video_DB()
 
     def record(self, ):
         # Open the default camera
@@ -43,6 +45,9 @@ class Camera:
         cam.release()
         out.release()
         cv2.destroyAllWindows()
+
+        video = self.getVideo()
+        self.vidio_db.addVideo(video)
 
     def getVideo(self, ):
         cap = cv2.VideoCapture(os.path.join(self.data_path, 'output.mp4'))

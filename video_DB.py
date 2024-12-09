@@ -3,14 +3,17 @@
 
 class Video_DB:
     def __init__(self):
-        self.videoList = None
-        self.storage = None
+        self.videoList = []
+        self.storage = 20 # 20 videos
+        self.remainingStorage = 10
 
-    def addVideo(self, ):
-        pass
+    def addVideo(self, image_list):
+        if len(self.videoList) < self.storage:
+            self.videoList.append(image_list)
 
     def deleteVideo(self, ):
-        pass
+        if len(self.videoList) > self.remainingStorage:
+            self.videoList.pop(0)
 
-    def getVideo(self, ):
-        pass
+    def getVideo(self, index):
+        return self.videoList[index]
