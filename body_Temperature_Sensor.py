@@ -3,15 +3,16 @@
 
 from sensor_interface import SensorInterface
 
+from sensor_data_generator import generate_temperature_data
+
 class Body_Temperature_Sensor(SensorInterface):
     def __init__(self):
-        self.sensorInfo = "Body Temperature Sensor Data"
+        self.sensorInfo = "Body Temperature Sensor"
+        self.data = generate_temperature_data(samples=1000)
 
     def extractBioInfo(self):
-        print("[Body_Temperature_Sensor] Extracting body temperature info")
-        # 예시 데이터로 섭씨 온도를 반환
-        return {"temperature": 36.6}
+        """체온 데이터 반환"""
+        return self.data
 
     def getBioInfo(self):
-        print("[Body_Temperature_Sensor] Returning sensor info")
         return self.sensorInfo

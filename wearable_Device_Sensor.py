@@ -18,3 +18,7 @@ class Wearable_Device_Sensor(SensorInterface):
     def getBioInfo(self):
         print("[Decorator] Logging bio info request")
         return self.sensor.getBioInfo()
+
+
+def wearble_device_sensor():
+    return None
