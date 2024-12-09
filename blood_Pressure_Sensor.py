@@ -1,15 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from Interface import Interface
+from sensor_interface import SensorInterface
 
-
-class Blood_Pressure_Sensor(Interface):
+class Blood_Pressure_Sensor(SensorInterface):
     def __init__(self):
-        self.sensorInfo = None
+        self.sensorInfo = "Blood Pressure Sensor Data"
 
-    def extractBioInfo(self, ):
-        pass
+    def extractBioInfo(self):
+        print("[Blood_Pressure_Sensor] Extracting blood pressure info")
+        return {"systolic": 120, "diastolic": 80}
 
-    def getBioInfo(self, ):
-        pass
+    def getBioInfo(self):
+        print("[Blood_Pressure_Sensor] Returning sensor info")
+        return self.sensorInfo
