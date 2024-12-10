@@ -7,7 +7,7 @@ from sensor_data_generator import generate_blood_pressure_data
 
 class Blood_Pressure_Sensor(SensorInterface):
     def __init__(self):
-        self.sensorInfo = "Blood Pressure Sensor Data"
+        self.sensorInfo = "Blood Pressure Sensor"
         self.data = generate_blood_pressure_data(samples=1000)
 
     def extractBioInfo(self):

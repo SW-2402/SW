@@ -7,7 +7,7 @@ from sensor_data_generator import generate_ecg_data
 
 class ESG_Sensor(SensorInterface):
     def __init__(self):
-        self.sensorInfo = "ESG Sensor Data"
+        self.sensorInfo = "ESG Sensor"
         self.data = generate_ecg_data(samples=1000)
 
     def extractBioInfo(self):

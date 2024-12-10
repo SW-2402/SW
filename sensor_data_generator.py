@@ -11,7 +11,8 @@ def generate_blood_pressure_data(samples=1000):
     np.random.seed(1)
     systolic = 120 + 10 * np.sin(0.1 * np.linspace(0, 100, samples)) + 5 * np.random.randn(samples)
     diastolic = 80 + 5 * np.sin(0.1 * np.linspace(0, 100, samples)) + 3 * np.random.randn(samples)
-    return np.stack((systolic, diastolic), axis=1)  # 수축기/이완기 압력
+    # return np.stack((systolic, diastolic), axis=1)  # 수축기/이완기 압력
+    return systolic - diastolic  # 이완기 - 수축기 편차로 혈압 판단
 
 def generate_ecg_data(samples=1000):
     """심전도 데이터 생성 (더미)"""

@@ -1,53 +1,35 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 
 import json
 
 class Sensor_Info_Preprocessor:
     def __init__(self):
-        self.sensorInfoHistory = None  # Can be used to store sensor information history
+        self.sensorInfoHistory = []  # Can be used to store sensor information history
         # pass
 
-    def getFormattedBioData(self, data_type, data):
+    def getFormattedBioData(self, bio_data, sensor_type):
         """
-        데이터를 규격화하여 JSON 형식으로 변환.
-        - data_type: 데이터 종류 (e.g., "temperature", "blood_pressure", "ecg")
-        - data: 센서 데이터
+        생체 데이터를 JSON 형식으로 규격화.
         """
-        if data_type == "temperature":
-            return json.dumps({"temperature": data.tolist()})
-        elif data_type == "blood_pressure":
-            return json.dumps({
-                "systolic": data[:, 0].tolist(),
-                "diastolic": data[:, 1].tolist()
-            })
-        elif data_type == "ecg":
-            return json.dumps({"ecg_signal": data.tolist()})
+        if sensor_type == "Body Temperature Sensor":
+            data_type = "temperature"
+        elif sensor_type == "Blood Pressure Sensor":
+            data_type = "blood_pressure"
+        elif sensor_type == "ECG Sensor":
+            data_type = "ecg"
         else:
-            raise ValueError("Unknown data type")
+            raise ValueError(f"Unknown data_type: {sensor_type}")
 
-    def getFormatedBioData2(self, data):
-        """
-        Formats the raw biometric data into a standardized format (e.g., JSON).
+        # JSON 포맷팅
+        formatted_data = {
+            "sensor_type": sensor_type,
+            "data_type" : data_type,
+            "data": bio_data.tolist() if hasattr(bio_data, "tolist") else bio_data
+        }
+        self.sensorInfoHistory.append(formatted_data)
+        print(f"[Preprocessor] Data formatted for {data_type}")
+        return json.dumps(formatted_data)
 
-        Args:
-            data: The raw biometric data.
-
-        Returns:
-            The formatted biometric data. (Implementation depends on the chosen format)
-        """
-        # Implement logic to format data based on sensor type and desired output format (e.g., JSON)
-        # This example assumes conversion to JSON for simplicity
-        formatted_data = {"sensor_type": self.getBioInfo(), "data": data.tolist()}  # Replace with actual formatting logic
-        return formatted_data
-
-    def sendToLSTM(self, formatted_data, model):
+    def sendToModel(self, formatted_data, model):
+        # def sendToLSTM(self, formatted_data, model):
         print("[Preprocessor] Sending formatted data to LSTM model.")
         model.predict(formatted_data)
-
-# class Sensor_Info_Preprocessor:
-#     def __init__(self):
-#         self.sensorInfoHistory = None
-#
-#     def getFormatedBioData(self, ):
-#         pass

@@ -1,7 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# 센서 정보 처리
-# torch, LSTM 사용으로 더미데이터 사용 권장
 
 from sensor_interface import SensorInterface
 
