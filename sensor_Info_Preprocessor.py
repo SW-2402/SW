@@ -5,7 +5,8 @@ import json
 
 class Sensor_Info_Preprocessor:
     def __init__(self):
-        pass
+        self.sensorInfoHistory = None  # Can be used to store sensor information history
+        # pass
 
     def getFormattedBioData(self, data_type, data):
         """
@@ -25,10 +26,24 @@ class Sensor_Info_Preprocessor:
         else:
             raise ValueError("Unknown data type")
 
+    def getFormatedBioData2(self, data):
+        """
+        Formats the raw biometric data into a standardized format (e.g., JSON).
 
+        Args:
+            data: The raw biometric data.
 
+        Returns:
+            The formatted biometric data. (Implementation depends on the chosen format)
+        """
+        # Implement logic to format data based on sensor type and desired output format (e.g., JSON)
+        # This example assumes conversion to JSON for simplicity
+        formatted_data = {"sensor_type": self.getBioInfo(), "data": data.tolist()}  # Replace with actual formatting logic
+        return formatted_data
 
-
+    def sendToLSTM(self, formatted_data, model):
+        print("[Preprocessor] Sending formatted data to LSTM model.")
+        model.predict(formatted_data)
 
 # class Sensor_Info_Preprocessor:
 #     def __init__(self):

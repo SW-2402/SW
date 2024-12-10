@@ -5,6 +5,7 @@
 
 from sensor_interface import SensorInterface
 
+
 class Wearable_Device_Sensor(SensorInterface):
     def __init__(self, sensor: SensorInterface):
         self.sensor = sensor
@@ -19,6 +20,3 @@ class Wearable_Device_Sensor(SensorInterface):
         print("[Decorator] Logging bio info request")
         return self.sensor.getBioInfo()
 
-
-def wearble_device_sensor():
-    return None
