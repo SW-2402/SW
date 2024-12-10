@@ -10,11 +10,11 @@ from video_DB import Video_DB
 load_dotenv()
 
 class Camera:
-    def __init__(self):
+    def __init__(self, video_db):
         self.recordingTime = None
         self.videoList = None
         self.data_path = os.getenv('DATA_PATH')
-        self.vidio_db = Video_DB()
+        self.vidio_db = video_db # Video_DB()
 
     def record(self, ):
         # Open the default camera
@@ -25,7 +25,7 @@ class Camera:
         frame_height = int(cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
         # Define the codec and create VideoWriter object
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
         out = cv2.VideoWriter(os.path.join(self.data_path, 'output.mp4'), fourcc, 30.0, (frame_width, frame_height))
 
         while True:
@@ -58,9 +58,13 @@ class Camera:
             if frame is not None:
                 # frame is ndarray 640x480x3
                 image_list.append(frame)
+
+            try:
                 cv2.imshow('frame',frame)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
+            except:
+                break
 
         cap.release()
         cv2.destroyAllWindows()

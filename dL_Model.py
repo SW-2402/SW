@@ -1,11 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from Model import Model
-from Interface2 import Interface2
+from model import Model
 
-
-class DL_Model(Model, Interface2):
+class DL_Model(Model):
     def __init__(self):
         self.model = None
 
