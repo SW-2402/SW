@@ -30,6 +30,7 @@ class Sensor_Info_Preprocessor:
         return json.dumps(formatted_data)
 
     def sendToModel(self, formatted_data, model):
-        # def sendToLSTM(self, formatted_data, model):
-        print("[Preprocessor] Sending formatted data to LSTM model.")
-        model.predict(formatted_data)
+        print("[Preprocessor] Sending formatted data to model...")
+        result = model.predict(formatted_data)
+        print(f"[Preprocessor] Model prediction result: {result}")
+        return result
