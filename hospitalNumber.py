@@ -1,13 +1,19 @@
 from hospitalAPI import HospitalAPI
+from gPSInfo import GPSInfo
+
 class HospitalNumber:
     def __init__(self):
         self.phoneNumber = None
         self.hospitalAPI = HospitalAPI()
-    def sendNumber(self, ):
-        _, self.phoneNumber = self.hospitalAPI.getInfo('127.085156592737','37.5606691709596')
+        self.GPS = GPSInfo()
+        
+        
+    def __sendNumber(self, ):
+        longitude, latitude = self.GPS.getInfo()
+        _, self.phoneNumber = self.hospitalAPI.getInfo(longitude,latitude)
         pass
 
     def getInfo(self, ):
-        self.sendNumber()
+        self.__sendNumber()
         return self.phoneNumber
     

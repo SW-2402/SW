@@ -7,10 +7,10 @@ class HospitalAPI:
         self.hospitalNumber = []
 
     def getInfo(self, latitude, longitude):
-        self.searchInfo(latitude, longitude)
+        self.__searchInfo(latitude, longitude)
         return self.hospitalLocation, self.hospitalNumber
     
-    def findHos(self, xml_data):
+    def __findHos(self, xml_data):
         root = ET.fromstring(xml_data)
         
         # Extracting header information
@@ -47,7 +47,7 @@ class HospitalAPI:
             '''
             
             
-    def searchInfo(self, latitude, longitude):
+    def __searchInfo(self, latitude, longitude):
         url = 'http://apis.data.go.kr/B552657/HsptlAsembySearchService/getHsptlMdcncLcinfoInqire'
         params ={
             'serviceKey' : 'xeHjoT3CYwwoJcAOini6dIUeT9HggH6jUZDyFs8ni1yxSiJvQOfU8HUGN6BEg29Vl6MdWdGvQrXAyH7SIQDoEA==', 
@@ -58,6 +58,6 @@ class HospitalAPI:
         }
 
         response = requests.get(url, params=params)
-        self.findHos(response.content)
+        self.__findHos(response.content)
         pass
 

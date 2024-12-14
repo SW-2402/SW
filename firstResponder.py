@@ -6,7 +6,7 @@ class FirstResponder:
         self.phoneNumber = {}
         self.db = FirstResponderDB()
         
-    def sendNumber(self, ):
+    def __sendNumber(self, ):
         self.db.addInfo("건구수", "010-1234-5678")
         self.db.addInfo("김건국", "010-1111-2222")
         FirstResponderinfo = self.db.getInfo()
@@ -15,5 +15,5 @@ class FirstResponder:
         pass
 
     def getInfo(self, ):
-        self.sendNumber()
+        self.__sendNumber()
         return self.name, self.phoneNumber

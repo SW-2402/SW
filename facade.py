@@ -8,16 +8,13 @@ class facade:
         self.emergencyCall = []
 
     def getAllNumber(self, ):
-        self.sendAllNumber()
+        self.__sendAllNumber()
         return self.emergencyCall
 
-    def sendAllNumber(self, ):
+    def __sendAllNumber(self, ):
         _, firstResponderNumber = self.firstResponder.getInfo()
         hospitalNumber = self.hospitalNumber.getInfo()
         self.emergencyCall.extend(firstResponderNumber)
         self.emergencyCall.extend(hospitalNumber)
         print(self.emergencyCall)
         
-if __name__ == "__main__":
-    facade = facade()
-    facade.sendAllNumber()
