@@ -8,82 +8,98 @@ import numpy as np
 import os
 import tensorflow as tf
 import warnings
+import matplotlib.pyplot as plt
+from datetime import datetime
+# from dotenv import load_dotenv
+
+# 환경 변수 로드
+# load_dotenv()
 
 # TensorFlow 로그 레벨 설정
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 tf.get_logger().setLevel('ERROR')
+api_key = os.getenv("API_KEY")
 
 # Keras 경고 숨기기
 warnings.filterwarnings("ignore", category=UserWarning, module="keras")
 
 
 def main():
+    is_any_risk = predict_all_sensors()
+    if is_any_risk:
+        print("[Main] Risk detected in at least one sensor!")
+    else:
+        print("[Main] All sensors indicate normal status.")
+
+def plot_data(sensor_type, raw_data):
+    """
+    위험 상태의 데이터를 그래프로 시각화하는 함수.
+    """
+    # 현재 스크립트가 위치한 디렉토리에서 sensor_history 폴더로 경로 설정
+    directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sensor_history')
+
+    # 디렉토리가 없으면 생성
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # 현재 시각을 파일명에 덧붙일 수 있는 형식으로 가져오기
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    print(f"[Main] Plotting data for {sensor_type}...")
+    plt.figure(figsize=(10, 6))
+    plt.plot(raw_data, label=sensor_type, color="red")
+    plt.title(f"{sensor_type} Data Visualization (Risk Detected)")
+    plt.xlabel("Time Steps")
+    plt.ylabel("Sensor Values")
+    plt.legend()
+    plt.grid(True)
+
+    # 파일명에 현재 시각 추가
+    file_name = f"{sensor_type}_{current_time}.png"
+    # 파일 저장 (디렉토리 경로 포함)
+    file_path = os.path.join(directory, file_name)
+    plt.savefig(file_path)
+    print(f"Graph saved to {file_path}")
+
+    # 그래프 화면에 표시
+    plt.show()
+
+def predict_all_sensors():
+    """
+    센서 데이터를 처리하고 모든 센서에 대해 예측을 수행하는 함수.
+    """
     print("[Main] Starting the biometric data processing...")
 
-    # 센서 초기화
-    sensors = {
-        "temperature": Wearable_Device_Sensor(Body_Temperature_Sensor()),
-        "blood_pressure": Wearable_Device_Sensor(Blood_Pressure_Sensor()),
-        "ecg": Wearable_Device_Sensor(ESG_Sensor())
+    # 센서 목록 초기화
+    sensor_classes = {
+        "Body Temperature Sensor": Body_Temperature_Sensor,
+        "Blood Pressure Sensor": Blood_Pressure_Sensor,
+        "ECG Sensor": ESG_Sensor
     }
 
+    # 모델 초기화
     model = Model()
-    for sensor_type, sensor in sensors.items():
-        print(f"\n[Main] Requesting prediction for {sensor_type} sensor...")
+
+    # 위험 상태 플래그
+    any_risk_detected = False
+
+    # 모든 센서에 대해 예측 수행
+    for sensor_type, sensor_class in sensor_classes.items():
+        print(f"\n[Main] Processing {sensor_type}...")
+        sensor = Wearable_Device_Sensor(sensor_class())
         raw_data = sensor.extractBioInfo()
         result = model.predict(raw_data, sensor_type)
-        print(f"[Main] Prediction for {sensor_type} sensor: {result}")
+        print(f"[Main] Prediction for {sensor_type}: {'위험' if result else '정상'}")
+
+        # 위험일 경우 그래프 시각화
+        if result:
+            any_risk_detected = True
+            plot_data(sensor_type, raw_data)
+
     print("[Main] Biometric data processing completed.")
 
-
-
-    # # 데이터 전처리 및 결과 처리
-    # preprocessor = Sensor_Info_Preprocessor()
-    # for sensor_type, sensor in sensors.items():
-    #     print(f"\n[Main] Requesting data processing for {sensor_type} sensor...")
-    #     result = preprocessor.process_sensor_data(sensor, sensor_type)
-    #     print(f"[Main] Result for {sensor_type} sensor: {result}")
-    #print("[Main] Biometric data processing completed.")
-
-
-# def main1():
-#     # Sensor instances
-#     sensors = {
-#         "temperature": Wearable_Device_Sensor(Body_Temperature_Sensor()),
-#         "blood_pressure": Wearable_Device_Sensor(Blood_Pressure_Sensor()),
-#         "ecg": Wearable_Device_Sensor(ESG_Sensor())
-#     }
-#
-#     # Preprocessor and Model
-#     preprocessor = Sensor_Info_Preprocessor()
-#     model = Model()
-#
-#     # Process data from each sensor
-#     for sensor_type, sensor_instance in sensors.items():
-#         print(f"\n[Main] Processing data from {sensor_type} sensor...")
-#
-#         # Step 1: Extract raw data from sensor
-#         raw_data = sensor_instance.extractBioInfo()
-#         if raw_data is None or not isinstance(raw_data, (list, np.ndarray)) or len(raw_data) == 0:
-#             print(f"[Error] No valid data extracted from {sensor_type} sensor.")
-#             continue
-#
-#         # Step 2: Get sensor info
-#         sensor_info = sensor_instance.getBioInfo()
-#         if not sensor_info:
-#             print(f"[Error] No sensor info available for {sensor_type} sensor.")
-#             continue
-#
-#         # Step 3: Format data using preprocessor
-#         formatted_data = preprocessor.getFormattedBioData(raw_data, sensor_info)
-#
-#         # Step 4: Send data to the model
-#         print("[Main] Sending formatted data to model...")
-#         prediction = model.predict(formatted_data)
-#
-#         # Step 5: Print prediction result
-#         print(f"[Main] Prediction for {sensor_type}: {prediction}")
-
+    # 위험 상태 반환
+    return any_risk_detected
 
 if __name__ == "__main__":
     main()
