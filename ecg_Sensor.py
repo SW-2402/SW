@@ -11,11 +11,11 @@ class ESG_Sensor(SensorInterface):
         self.data = generate_ecg_data(samples=1000)
 
     def extractBioInfo(self):
-        print("[ECG_Sensor] Extracting electrocardiogram data")
+        print("[ECG Sensor] Extracting electrocardiogram data...")
         return self.data
         # 예시 데이터로 ESG 데이터를 반환
         # return {"ecg_waveform": [0.1, 0.3, 0.5, 0.2, 0.0]}
 
     def getBioInfo(self):
-        print("[ECG_Sensor] Returning sensor info")
+        print("[ECG Sensor] Returning sensor information...")
         return self.sensorInfo

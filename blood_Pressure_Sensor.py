@@ -11,9 +11,9 @@ class Blood_Pressure_Sensor(SensorInterface):
         self.data = generate_blood_pressure_data(samples=1000)
 
     def extractBioInfo(self):
-        print("[Blood_Pressure_Sensor] Extracting blood pressure info")
+        print("[Blood Pressure Sensor] Extracting blood pressure data...")
         return self.data
 
     def getBioInfo(self):
-        print("[Blood_Pressure_Sensor] Returning sensor info")
+        print("[Blood Pressure Sensor] Returning sensor information...")
         return self.sensorInfo

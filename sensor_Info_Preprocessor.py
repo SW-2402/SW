@@ -1,9 +1,18 @@
-
 import json
+
+#
+# #이 코드 사용되지 않고 있음
+# def sendToModel(self, formatted_data, model):
+#     print("[Preprocessor] Sending formatted data to model...")
+#     result = model.predict(formatted_data)
+#     print(f"[Preprocessor] Model prediction result: {result}")
+#     return result
 
 class Sensor_Info_Preprocessor:
     def __init__(self):
+        self.supported_sensors = ["temperature", "blood_pressure", "ecg"]
         self.sensorInfoHistory = []  # Can be used to store sensor information history
+        # self.model = Model()  #main 간소화1
         # pass
 
     def getFormattedBioData(self, bio_data, sensor_type):
@@ -22,15 +31,12 @@ class Sensor_Info_Preprocessor:
         # JSON 포맷팅
         formatted_data = {
             "sensor_type": sensor_type,
-            "data_type" : data_type,
+            "data_type": data_type,
             "data": bio_data.tolist() if hasattr(bio_data, "tolist") else bio_data
         }
-        self.sensorInfoHistory.append(formatted_data)
-        print(f"[Preprocessor] Data formatted for {data_type}")
+        #main 간소화1 self.sensorInfoHistory.append(formatted_data)
+
+        print(f"[Preprocessor] Data successfully formatted for {data_type}.")
         return json.dumps(formatted_data)
 
-    def sendToModel(self, formatted_data, model):
-        print("[Preprocessor] Sending formatted data to model...")
-        result = model.predict(formatted_data)
-        print(f"[Preprocessor] Model prediction result: {result}")
-        return result
+

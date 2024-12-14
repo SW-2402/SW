@@ -10,8 +10,9 @@ class Body_Temperature_Sensor(SensorInterface):
 
     def extractBioInfo(self):
         """체온 데이터 반환"""
-        print("[Body Temperature Sensor] Data extracted.")
+        print("[Body Temperature Sensor] Extracting temperature data...")
         return self.data
 
     def getBioInfo(self):
+        print("[Body Temperature Sensor] Returning sensor information...")
         return self.sensorInfo
