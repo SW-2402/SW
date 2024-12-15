@@ -1,12 +1,18 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 
-class Wearable_Device_Sensor:
-    def __init__(self):
-        self.sensorInfo = None
+from sensor_interface import SensorInterface
 
-    def extractBioInfo(self, ):
-        pass
 
-    def getBioInfo(self, ):
-        pass
+class Wearable_Device_Sensor(SensorInterface):
+    def __init__(self, sensor: SensorInterface):
+        self.sensor = sensor
+
+    def extractBioInfo(self):
+        print("[Decorator] Pre-processing in Wearable_Device_Sensor")
+        data = self.sensor.extractBioInfo()
+        print("[Decorator] Post-processing in Wearable_Device_Sensor")
+        return data
+
+    def getBioInfo(self):
+        print("[Decorator] Retrieving sensor information...")
+        return self.sensor.getBioInfo()
+
