@@ -3,14 +3,11 @@
 
 class Model_Observer:
     def __init__(self):
-        self.models = None
-        self.alert = None
+        self.__alert = None
 
-    def subModel(self, ):
-        pass
-
-    def unsubModel(self, ):
-        pass
+    def setAlert(self, alert):
+        self.__alert = alert
 
     def notifyAlert(self, ):
-        pass
+        print('Model_Observer notifyAlert')
+        self.__alert.startEmergency()

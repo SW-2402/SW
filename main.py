@@ -5,6 +5,7 @@ from ecg_Sensor import ECG_Sensor
 from sensor_Info_Preprocessor import Sensor_Info_Preprocessor
 from model import Model
 from sensor_Model import SensorModel
+
 import numpy as np
 import os
 import tensorflow as tf
@@ -71,6 +72,7 @@ def predict_all_sensors():
     print("[Main] Starting the biometric data processing...")
 
     # 모델 초기화
+
     model = SensorModel()
 
     # 위험 상태 플래그
