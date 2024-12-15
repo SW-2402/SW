@@ -17,26 +17,26 @@ class Video_Preprocessor:
         self.video_db = video_db
         self.model_path = os.getenv('MODEL_PATH')
 
-    def splitVideo(self, ):
-        pass
+    def convertFormat(self, df):
+        # Convert the CSV file to a format that the model can use
+        df = df.fillna(0)
+        df = df.astype(int)
+        df = df.values.tolist()
+        return df
 
-    def emphasizePerson(self, ):
-        pass
 
-    def convertFormat(self, ):
-        pass
-
-    def getSkeleton(self, video_path):
+    def getSkeleton(self, record_num):
         # 각 파일 path
-        model_path = os.getenv('MODEL_PATH')
         data_path = os.getenv('DATA_PATH')
-        protoFile = os.path.join(model_path, "pose_deploy_linevec.prototxt") # pose_deploy_linevec_faster_4_stages
-        weightsFile = os.path.join(model_path, "pose_iter_440000.caffemodel")
+        protoFile = os.path.join(self.model_path, "pose_deploy_linevec.prototxt") # pose_deploy_linevec_faster_4_stages
+        weightsFile = os.path.join(self.model_path, "pose_iter_440000.caffemodel")
+        
+        record_path = self.video_db.getVideo(record_num)
         
         # 위의 path에 있는 network 불러오기
         net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
 
-        video = cv2.VideoCapture(os.path.join(data_path, video_path))
+        video = cv2.VideoCapture(record_path)
         n_frames=int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         fps=int(video.get(cv2.CAP_PROP_FPS))
         ok, frame = video.read()
@@ -45,8 +45,11 @@ class Video_Preprocessor:
         w=480
         inHeight=368
         inWidth=368
+        freq = 15
 
-        out_path = os.path.join(data_path, 'out_11.mp4')
+        n_frames //= freq
+
+        out_path = os.path.join(data_path, f'{record_num}_out.mp4')
         # Define the output
         output = cv2.VideoWriter(out_path, 0, fps, (w, h))
 
@@ -71,16 +74,19 @@ class Video_Preprocessor:
         # Set up the progressbar
         widgets = ["--[INFO]-- Analyzing Video: ", progressbar.Percentage(), " ",
                 progressbar.Bar(), " ", progressbar.ETA()]
-        pbar = progressbar.ProgressBar(maxval = n_frames,
+        pbar = progressbar.ProgressBar(maxval = n_frames+1,
                                     widgets=widgets).start()
         p = 0
 
-        idx = 0
+        frame_count = 0
         # Start the iteration
         while True:
             ok, frame = video.read()
             if ok != True:
                 break
+            if frame_count % 15 != 0:
+                frame_count += 1
+                continue
             
             frame = cv2.resize(frame, (w, h), cv2.INTER_AREA)    
             frame_copy = np.copy(frame)
@@ -116,6 +122,8 @@ class Video_Preprocessor:
             for pair in pairs:
                 partA = pair[0]
                 partB = pair[1]
+                if points[partA] == (0, 0) or points[partB] == (0, 0):
+                    continue
                 cv2.line(frame_copy, points[partA], points[partB], line_color, 1, lineType=cv2.LINE_AA)
             
             if writer is None:
@@ -131,12 +139,14 @@ class Video_Preprocessor:
             
             p += 1
             pbar.update(p)
+
+            frame_count += 1
             
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
                 break
 
-        csv_path = os.path.join(data_path, 'skeleton.csv')
+        csv_path = os.path.join(data_path, f'{record_num}.csv')
         # Save the output data from the video in CSV format
         df = pd.DataFrame(data)
         df.to_csv(csv_path, index = False)
@@ -146,6 +156,6 @@ class Video_Preprocessor:
         video.release()
         cv2.destroyAllWindows()
 
-        return csv_path
-    
-Video_Preprocessor(None, None).getSkeleton('output.mp4')
+        df = self.convertFormat(df)
+
+        return df
