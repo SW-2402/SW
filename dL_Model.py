@@ -9,11 +9,11 @@ load_dotenv()
 
 class DL_Model(Model):
     def __init__(self, video_processor):
-        self.model = None
-        self.modelName = 'DL_Model'
-        self.video_processor = video_processor
-        self.observer_list = []
-        self.isEmergency = False
+        self.__model = None
+        self.__modelName = 'DL_Model'
+        self.__video_processor = video_processor
+        self.__observer_list = []
+        self.__isEmergency = False
 
     def predict(self, record_num):
         model_input = self.video_processor.getSkeleton(record_num)

@@ -6,26 +6,26 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Video_DB:
-    def __init__(self, camera):
-        self.videoList = {}
-        self.storage = 20 # 20 videos
-        self.remainingStorage = 10
-        self.camera = camera
-        self.data_path = os.getenv('DATA_PATH')
+    def __init__(self, __camera):
+        self.__videoList = {}
+        self.__storage = 20 # 20 videos
+        self.__remaining__Storage = 10
+        self.__camera = __camera
+        self.__data_path = os.getenv('DATA_PATH')
 
     def addVideo(self, record_num):
-        if len(self.videoList) < self.storage:
-            self.videoList[record_num] = (os.path.join(self.data_path, f'{record_num}.mp4'))
+        if len(self.__videoList) < self.__storage:
+            self.__videoList[record_num] = (os.path.join(self.__data_path, f'{record_num}.mp4'))
 
     def deleteVideo(self, ):
-        if len(self.videoList) > self.remainingStorage:
-            self.videoList.pop(0)
+        if len(self.__videoList) > self.__remaining__Storage:
+            self.__videoList.pop(0)
 
     def getVideo(self, index):
         try:
-            video = self.videoList[index]
+            video = self.__videoList[index]
         except:
-            self.camera.record(index)
-            video = self.camera.getVideo(index)
+            self.__camera.record(index)
+            video = self.__camera.getVideo(index)
 
         return video

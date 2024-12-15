@@ -12,12 +12,11 @@ load_dotenv()
 
 class Video_Preprocessor:
     def __init__(self, camera, video_db):
-        self.skeletonResult = None
-        self.camera = camera
-        self.video_db = video_db
-        self.model_path = os.getenv('MODEL_PATH')
+        self.__skeletonResult = None
+        self.__video_db = video_db
+        self.__model_path = os.getenv('MODEL_PATH')
 
-    def convertFormat(self, df):
+    def __convertFormat(self, df):
         # Convert the CSV file to a format that the model can use
         df = df.fillna(0)
         df = df.astype(int)
@@ -28,10 +27,10 @@ class Video_Preprocessor:
     def getSkeleton(self, record_num):
         # 각 파일 path
         data_path = os.getenv('DATA_PATH')
-        protoFile = os.path.join(self.model_path, "pose_deploy_linevec.prototxt") # pose_deploy_linevec_faster_4_stages
-        weightsFile = os.path.join(self.model_path, "pose_iter_440000.caffemodel")
+        protoFile = os.path.join(self.__model_path, "pose_deploy_linevec.prototxt") # pose_deploy_linevec_faster_4_stages
+        weightsFile = os.path.join(self.__model_path, "pose_iter_440000.caffemodel")
         
-        record_path = self.video_db.getVideo(record_num)
+        record_path = self.__video_db.getVideo(record_num)
         
         # 위의 path에 있는 network 불러오기
         net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
@@ -156,6 +155,6 @@ class Video_Preprocessor:
         video.release()
         cv2.destroyAllWindows()
 
-        df = self.convertFormat(df)
+        self.__skeletonResult = self.__convertFormat(df)
 
-        return df
+        return self.__skeletonResult
