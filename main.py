@@ -1,7 +1,7 @@
 from wearable_Device_Sensor import Wearable_Device_Sensor
 from body_Temperature_Sensor import Body_Temperature_Sensor
 from blood_Pressure_Sensor import Blood_Pressure_Sensor
-from ecg_Sensor import ESG_Sensor
+from ecg_Sensor import ECG_Sensor
 from sensor_Info_Preprocessor import Sensor_Info_Preprocessor
 from model import Model
 import numpy as np
@@ -70,36 +70,29 @@ def predict_all_sensors():
     """
     print("[Main] Starting the biometric data processing...")
 
-    # 센서 목록 초기화
-    sensor_classes = {
-        "Body Temperature Sensor": Body_Temperature_Sensor,
-        "Blood Pressure Sensor": Blood_Pressure_Sensor,
-        "ECG Sensor": ESG_Sensor
-    }
-
     # 모델 초기화
     model = Model()
 
     # 위험 상태 플래그
     any_risk_detected = False
 
-    # 모든 센서에 대해 예측 수행
-    for sensor_type, sensor_class in sensor_classes.items():
-        print(f"\n[Main] Processing {sensor_type}...")
-        sensor = Wearable_Device_Sensor(sensor_class())
-        raw_data = sensor.extractBioInfo()
-        result = model.predict(raw_data, sensor_type)
-        print(f"[Main] Prediction for {sensor_type}: {'위험' if result else '정상'}")
+    sensors = [
+        Wearable_Device_Sensor(Body_Temperature_Sensor()),
+        Wearable_Device_Sensor(Blood_Pressure_Sensor()),
+        Wearable_Device_Sensor(ECG_Sensor())
+    ]
 
-        # 위험일 경우 그래프 시각화
+    for sensor in sensors:
+        print(f"\n[Main] Processing data for {sensor.sensor.sensorInfo}...")
+        sensor.extractBioInfo()  # 센서 데이터 추출
+        result = model.predict(sensor.sensor)  # 원래 센서를 모델에 전달
+        print(f"Prediction Result for {sensor.sensor.sensorInfo}:", "위험" if result else "정상")
         if result:
             any_risk_detected = True
-            plot_data(sensor_type, raw_data)
+            plot_data(sensor.sensor.sensorInfo, sensor.getBioInfo())  # 결과 시각화
 
-    print("[Main] Biometric data processing completed.")
-
-    # 위험 상태 반환
     return any_risk_detected
+
 
 if __name__ == "__main__":
     main()
