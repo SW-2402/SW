@@ -9,5 +9,7 @@ class Model_Observer:
         self.__alert = alert
 
     def notifyAlert(self, ):
+        print('-'*20)
         print('Model_Observer notifyAlert')
+        print('-'*20)
         self.__alert.startEmergency()

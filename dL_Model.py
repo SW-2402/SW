@@ -12,11 +12,11 @@ class DL_Model(Model):
         self.__model = None
         self.__modelName = 'DL_Model'
         self.__video_processor = video_processor
-        self.__observer_list = []
+        self.observer_list = []
         self.__isEmergency = False
 
     def predict(self, record_num):
-        model_input = self.video_processor.getSkeleton(record_num)
+        model_input = self.__video_processor.getSkeleton(record_num)
 
         skeleton_count = 0
         for frame in model_input:
@@ -25,11 +25,15 @@ class DL_Model(Model):
                     skeleton_count += 1
         
         if skeleton_count > len(model_input) * 25 * 0.5:
-            self.isEmergency = True
+            self.__isEmergency = True
 
+        print('-'*20)
         print('DL_Model predict')
+        print('-'*20)
 
-        if self.isEmergency:
+        if self.__isEmergency:
             self.notifyState()
         else:
+            print('-'*20)
             print('No emergency detected')
+            print('-'*20)
