@@ -1,3 +1,10 @@
+from camera import Camera
+from video_DB import Video_DB
+from dL_Model import DL_Model
+from model_Observer import Model_Observer
+from video_Preprocessor import Video_Preprocessor
+from alert import Alert
+
 from wearable_Device_Sensor import Wearable_Device_Sensor
 from body_Temperature_Sensor import Body_Temperature_Sensor
 from blood_Pressure_Sensor import Blood_Pressure_Sensor
@@ -5,8 +12,8 @@ from ecg_Sensor import ECG_Sensor
 from sensor_Info_Preprocessor import Sensor_Info_Preprocessor
 from model import Model
 from sensor_Model import SensorModel
+from autoMobility import AutoMobility
 
-import numpy as np
 import os
 import tensorflow as tf
 import warnings
@@ -25,10 +32,11 @@ api_key = os.getenv("API_KEY")
 # Keras 경고 숨기기
 warnings.filterwarnings("ignore", category=UserWarning, module="keras")
 
-def main():
+def sensor_main(auto_mobility):
     is_any_risk = predict_all_sensors()
     if is_any_risk:
         print("[Main] Risk detected in at least one sensor!")
+        auto_mobility.moveTo()
     else:
         print("[Main] All sensors indicate normal status.")
 
@@ -96,6 +104,27 @@ def predict_all_sensors():
     return any_risk_detected
 
 
-if __name__ == "__main__":
-    main()
 
+# 1. 센서로 읽어서 위험이 뜨면 이동
+auto_mobility = AutoMobility()
+sensor_main(auto_mobility)
+
+# 2-1. 카메라가 인식 -> 위험 X
+camera = Camera()
+video_db = Video_DB(camera)
+video_processor = Video_Preprocessor(camera, video_db)
+dl_model = DL_Model(video_processor)
+model_observer = Model_Observer()
+alert = Alert()
+
+video_db.addVideo(1)
+video_db.addVideo(2)
+## df = video_processor.getSkeleton(2)
+
+dl_model.subObserver(model_observer)
+model_observer.setAlert(alert)
+
+dl_model.predict(2)
+
+# 2-2. 카메라가 인식 -> 위험 O -> 알림
+dl_model.predict(1)

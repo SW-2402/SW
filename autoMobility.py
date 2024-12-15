@@ -6,4 +6,4 @@ class AutoMobility:
         self.wheel = None
 
     def moveTo(self, ):
-        pass
+        print("AutoMobility is moving to the location.")
