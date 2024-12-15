@@ -1,11 +1,15 @@
 import requests
 import xml.etree.ElementTree as ET
+import os
+from dotenv import load_dotenv
 
 class HospitalAPI:
     def __init__(self):
+        load_dotenv()
         self.hospitalLocation = []
         self.hospitalNumber = []
-
+        self.serviceKey = os.getenv("serviceKey")
+        
     def getInfo(self, latitude, longitude):
         self.__searchInfo(latitude, longitude)
         return self.hospitalLocation, self.hospitalNumber
@@ -50,9 +54,9 @@ class HospitalAPI:
     def __searchInfo(self, latitude, longitude):
         url = 'http://apis.data.go.kr/B552657/HsptlAsembySearchService/getHsptlMdcncLcinfoInqire'
         params ={
-            'serviceKey' : 'xeHjoT3CYwwoJcAOini6dIUeT9HggH6jUZDyFs8ni1yxSiJvQOfU8HUGN6BEg29Vl6MdWdGvQrXAyH7SIQDoEA==', 
-            'WGS84_LON' : '127.085156592737', 
-            'WGS84_LAT' : '37.4881325624879', 
+            'serviceKey' : self.serviceKey, 
+            'WGS84_LON' : latitude, 
+            'WGS84_LAT' : longitude, 
             'pageNo' : 1, 
             'numOfRows' : 5
         }
