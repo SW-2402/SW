@@ -4,4 +4,4 @@ data
 models
 __pycache__
 .DS_Store
-
+sensor_history
