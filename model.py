@@ -1,5 +1,5 @@
-# Model Interface
 
+# Model Interface
 class Model:
     def __init__(self):
         self.__modelName = None
