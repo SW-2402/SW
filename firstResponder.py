@@ -1,12 +1,16 @@
 import csv
 from firstResponderDB import FirstResponderDB
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 class FirstResponder:
     def __init__(self):
         self.name = {}
         self.phoneNumber = {}
         self.db = FirstResponderDB()
-        self.__loadFromCSV("first_responder.csv")
+        self.__loadFromCSV(os.path.join(os.getenv("DATA_PATH"), os.getenv("FIRST_RESPONDER_FILE")))
         
     def __loadFromCSV(self, file_path):
         try:

@@ -49,7 +49,7 @@ class SensorModel(Model):
         # 결과 해석 (0.5 기준으로 정상/위험 판단)
         if prediction[0][0] > 0.5:
             print("[SensorModel] Status: 위험")
-            self.notifyState()  # 상태 변경 알림
+            # self.notifyState()  # 상태 변경 알림
             return True
         else:
             print("[SensorModel] Status: 정상")
