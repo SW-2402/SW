@@ -13,8 +13,6 @@ class Sensor_Info_Preprocessor:
             "Blood Pressure Sensor": "blood_pressure",
             "ECG Sensor": "ecg"
         }
-        # self.model = Model()  #main 간소화1
-        # pass
 
     def extractAndStoreData(self, sensor: SensorInterface):
         """
@@ -45,47 +43,3 @@ class Sensor_Info_Preprocessor:
         self.sensor_info_history.append(formatted_data)
         print(f"[Preprocessor] Data successfully formatted for {sensor_type}.")
         return json.dumps(formatted_data)
-
-
-    def process_sensor1(self, sensor: SensorInterface):
-        sensor_info = sensor.getBioInfo()
-        sensor_type = sensor.sensorInfo
-
-        if sensor_type not in self.supported_sensors:
-            raise ValueError(f"Unsupported sensor type: {sensor_type}")
-
-        # JSON 포맷팅
-        formatted_data = {
-            "sensor_type": sensor_type,
-            "data_type": self.supported_sensors[sensor_type],
-            "data": sensor_info.tolist() if hasattr(sensor_info, "tolist") else sensor_info
-        }
-
-        # 히스토리에 추가
-        self.sensor_info_history.append(formatted_data)
-        print(f"[Preprocessor] Data successfully formatted for {sensor_type}.")
-        return json.dumps(formatted_data)
-    def getFormattedBioData1(self, bio_data, sensor_type):
-        """
-        생체 데이터를 JSON 형식으로 규격화.
-        """
-        if sensor_type == "Body Temperature Sensor":
-            data_type = "temperature"
-        elif sensor_type == "Blood Pressure Sensor":
-            data_type = "blood_pressure"
-        elif sensor_type == "ECG Sensor":
-            data_type = "ecg"
-        else:
-            raise ValueError(f"Unknown data_type: {sensor_type}")
-
-        # JSON 포맷팅
-        formatted_data = {
-            "sensor_type": sensor_type,
-            "data_type": data_type,
-            "data": bio_data.tolist() if hasattr(bio_data, "tolist") else bio_data
-        }
-
-        print(f"[Preprocessor] Data successfully formatted for {data_type}.")
-        return json.dumps(formatted_data)
-
-
